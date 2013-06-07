@@ -52,7 +52,7 @@ class GaussLaguerreQR(QuadratureRule):
         # Transform quadrature weights
         h = self._hermite_recursion(real(sqrt(nodes)))
         weights = (sqrt(2.0*order-1.0) / (sqrt(2.0)*(order**2-order/2.0))
-                   * sqrt(nodes) * exp(-nodes) / (h[2*order-2,:] * h[2*order-1,:]))
+                   * sqrt(nodes) / (h[2*order-2,:] * h[2*order-1,:]))
 
         # The quadrature nodes \gamma.
         self._nodes = real(nodes).reshape((1,self._number_nodes))

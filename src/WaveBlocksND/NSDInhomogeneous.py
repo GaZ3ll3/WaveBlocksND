@@ -269,9 +269,9 @@ class NSDInhomogeneous(Quadrature):
         # We loose it when dividing by phi_0 hence manually add it again.
         # TODO: Do we need mixing parameters here?
         #       Preliminary answer: no
-        fr = (pi*eps**2)**(-0.25*D) * 1.0/sqrt(det(Pibra[2]))
-        fc = (pi*eps**2)**(-0.25*D) * 1.0/sqrt(det(Piket[2]))
-        normfactor = conjugate(fr)*fc
+        #fr = (pi*eps**2)**(-0.25*D) * 1.0/sqrt(det(Pibra[2]))
+        #fc = (pi*eps**2)**(-0.25*D) * 1.0/sqrt(det(Piket[2]))
+        #normfactor = conjugate(fr)*fc
 
         # Compute global phase difference
         phase = exp(1.0j/eps**2 * (Piket[4]-conjugate(Pibra[4])))
@@ -297,10 +297,10 @@ class NSDInhomogeneous(Quadrature):
             # Non-oscillatory parts
             # Wavepacket
             # TODO: This is a huge hack: division by phi_0 not stable?
-            basisr = self._pacbra.evaluate_basis_at(conjugate(h), row, prefactor=False)
-            basisr = basisr / basisr[0,:]
-            basisc = self._packet.evaluate_basis_at(h, col, prefactor=False)
-            basisc = basisc / basisc[0,:]
+            basisr = self._pacbra.evaluate_basis_at(conjugate(h), row, prefactor=True)
+            #basisr = basisr / basisr[0,:]
+            basisc = self._packet.evaluate_basis_at(h, col, prefactor=True)
+            #basisc = basisc / basisc[0,:]
             # Basis division by phi0 may introduce NaNs
             #basisr = nan_to_num(basisr)
             #basisc = nan_to_num(basisc)
@@ -316,7 +316,8 @@ class NSDInhomogeneous(Quadrature):
             # Sum up matrices over all quadrature nodes
             M = M + einsum("k,ik,jk", factor, conjugate(basisr), basisc)
 
-        return phase * normfactor * prefactor * M
+        #return phase * normfactor * prefactor * M
+        return phase * prefactor * M
 
 
     def perform_quadrature(self, row, col):
