@@ -46,9 +46,9 @@ class GaussHermiteQR(QuadratureRule):
         # The number of nodes in this quadrature rule
         self._number_nodes = nodes.size
 
-        # We deal with real values only, but the array we get from h_roots is of complex dtype
+        # Transform quadrature weights
         h = self._hermite_recursion(real(nodes))
-        weights = 1.0/((h**2) * self._order)
+        weights = 1.0 / (self._order * h**2)
 
         # The quadrature nodes \gamma.
         self._nodes = nodes.reshape((1,self._number_nodes))

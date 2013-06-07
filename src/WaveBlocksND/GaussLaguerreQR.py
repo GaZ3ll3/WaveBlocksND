@@ -49,6 +49,11 @@ class GaussLaguerreQR(QuadratureRule):
         # The number of nodes in this quadrature rule
         self._number_nodes = nodes.size
 
+        # Transform quadrature weights
+        h = self._hermite_recursion(real(sqrt(nodes)))
+        weights = (sqrt(2.0*order-1.0) / (sqrt(2.0)*(order**2-order/2.0))
+                   * sqrt(nodes) * exp(-nodes) / (h[2*order-2,:] * h[2*order-1,:]))
+
         # The quadrature nodes \gamma.
         self._nodes = real(nodes).reshape((1,self._number_nodes))
         # The quadrature weights \omega.
@@ -88,3 +93,23 @@ class GaussLaguerreQR(QuadratureRule):
         :return: An array containing the quadrature weights :math:`\omega_i`.
         """
         return self._weights.copy()
+
+
+    def _hermite_recursion(self, nodes):
+        r"""Evaluate the Hermite functions recursively up to the order :math:`2R - 1` on the given nodes.
+
+        :param nodes: The points at which the Hermite functions are evaluated.
+        :return: Returns a twodimensional array :math:`H` where the entry :math:`H[k,i]` is the value
+                 of the :math:`k`-th Hermite function evaluated at the node :math:`\gamma_i`.
+        """
+        H = zeros((2*self._order, nodes.size), dtype=floating)
+
+        H[0] = pi**(-0.25) * exp(-0.5*nodes**2)
+
+        if self._order > 1:
+            H[1] = sqrt(2.0) * nodes * H[0]
+
+            for k in xrange(2, 2*self._order):
+                H[k] = sqrt(2.0/k) * nodes * H[k-1] - sqrt((k-1.0)/k) * H[k-2]
+
+        return H
