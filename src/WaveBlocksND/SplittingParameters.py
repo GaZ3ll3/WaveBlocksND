@@ -27,6 +27,7 @@ class SplittingParameters(object):
         LT
         S2
         SS
+        L42          http://www.massey.ac.nz/~rmclachl/bit95.pdf
         BM42   4     BM4-2, Blanes/Moan, Table 3, SRKNb6
         Y4     4     Yoshida, see Hairer/Lubich/Wanner, p. 40, (4.4)
         Y61    6     Yoshida, see Hairer/Lubich/Wanner, p. 144, (3.11)
@@ -55,6 +56,16 @@ class SplittingParameters(object):
             a[0] = 0.5
             a[1] = 0.5
             b[0] = 1.0
+        elif method == "L42":
+            # http://www.massey.ac.nz/~rmclachl/bit95.pdf
+            s = 3
+            a = zeros(s)
+            b = zeros(s)
+            a[1] = 1.0 / sqrt(3.0)
+            a[0] = 0.5 * (1.0 - a[1])
+            a[2] = a[0]
+            b[0] = 0.5
+            b[1] = 0.5
         elif method == "BM42":
             # Order 4 (BM4-2, Blanes/Moan, Table 3, SRKNb6)
             s = 7
